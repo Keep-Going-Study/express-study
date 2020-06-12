@@ -1,3 +1,16 @@
+const express = require('express');
+const app = express();
+
+app.get('/', (req,res) => res.send('Hello World'));
+/* 위와 같은 코드
+app.get('/', function(req,res){
+  return res.send('/');
+});
+*/
+
+app.listen(8080, ()=> console.log('Example app listening at 8080 port'));
+
+/*
 var http = require('http');
 var fs = require('fs');
 var url = require('url');
@@ -141,3 +154,4 @@ var app = http.createServer(function(request,response){
     }
 });
 app.listen(8080);
+*/
