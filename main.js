@@ -3,6 +3,7 @@ var template = require('./lib/template.js');
 var path = require('path');
 var sanitizeHtml = require('sanitize-html');
 var qs = require('querystring');
+var bodyParser = require('body-parser');
 
 const express = require('express');
 const app = express();
@@ -16,6 +17,8 @@ app.get('/', function(req,res){
   return res.send('/');
 });
 */
+
+app.use(bodyParser.urlencoded({extended: false}));
 
 app.get('/', (req,res) => {
     fs.readdir('./data', function(error, filelist){
@@ -85,6 +88,16 @@ app.get('/create', function(request, response){
 });
 
 app.post('/create_process', function(request, response){
+    
+    console.log('request.body: ',request.body);
+    var post = request.body;
+    var title = post.title;
+    var description = post.description;
+    fs.writeFile(`data/${title}`, description, 'utf8', function(err){
+      response.redirect(302, `/page/${title}`);
+    });
+    
+    /*
     var body = '';
       request.on('data', function(data){
           body = body + data;
@@ -94,14 +107,10 @@ app.post('/create_process', function(request, response){
           var title = post.title;
           var description = post.description;
           fs.writeFile(`data/${title}`, description, 'utf8', function(err){
-              
-            /*
-            response.writeHead(302, {Location: `/page/${title}`});
-            response.end();
-            */
             response.redirect(302, `/page/${title}`);
           });
       });
+    */
 });
 
 app.get('/update/:pageId', function(request, response){
@@ -131,36 +140,25 @@ app.get('/update/:pageId', function(request, response){
 });
 
 app.post('/update_process', function(request, response){
-    var body = '';
-      request.on('data', function(data){
-          body = body + data;
+    
+    var post = request.body;
+    var id = post.id;
+    var title = post.title;
+    var description = post.description;
+    fs.rename(`data/${id}`, `data/${title}`, function(error){
+      fs.writeFile(`data/${title}`, description, 'utf8', function(err){
+        response.redirect(302, `/page/${title}`);
       });
-      request.on('end', function(){
-          var post = qs.parse(body);
-          var id = post.id;
-          var title = post.title;
-          var description = post.description;
-          fs.rename(`data/${id}`, `data/${title}`, function(error){
-            fs.writeFile(`data/${title}`, description, 'utf8', function(err){
-              response.redirect(302, `/page/${title}`);
-            });
-          });
-      });
+    });
 });
 
 app.post('/delete_process', function(request, response){
-    var body = '';
-      request.on('data', function(data){
-          body = body + data;
-      });
-      request.on('end', function(){
-          var post = qs.parse(body);
-          var id = post.id;
-          var filteredId = path.parse(id).base;
-          fs.unlink(`data/${filteredId}`, function(error){
-            response.redirect(302, '/');
-          });
-      });
+    var post = request.body;
+    var id = post.id;
+    var filteredId = path.parse(id).base;
+    fs.unlink(`data/${filteredId}`, function(error){
+      response.redirect(302, '/');
+    });
 });
 
 app.listen(8080, ()=> console.log('Example app listening at 8080 port'));
