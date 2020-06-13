@@ -1,12 +1,37 @@
+var fs = require('fs');
+var template = require('./lib/template.js');
+
 const express = require('express');
 const app = express();
 
+/*
 app.get('/', (req,res) => res.send('Hello World'));
-/* 위와 같은 코드
+
+위와 같은 코드
+
 app.get('/', function(req,res){
   return res.send('/');
 });
 */
+
+app.get('/', (req,res) => {
+    fs.readdir('./data', function(error, filelist){
+        var title = 'Welcome';
+        var description = 'Hello, Node.js';
+        var list = template.list(filelist);
+        var html = template.HTML(title, list,
+          `<h2>${title}</h2>${description}`,
+          `<a href="/create">create</a>`
+        );
+        
+        /*
+        res.writeHead(200);
+        res.end(html);
+        */
+        
+        res.status(200).send(html);
+    });
+});
 
 app.listen(8080, ()=> console.log('Example app listening at 8080 port'));
 
