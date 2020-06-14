@@ -4,6 +4,7 @@ var path = require('path');
 var sanitizeHtml = require('sanitize-html');
 var qs = require('querystring');
 var bodyParser = require('body-parser');
+var compression = require('compression');
 
 const express = require('express');
 const app = express();
@@ -19,6 +20,7 @@ app.get('/', function(req,res){
 */
 
 app.use(bodyParser.urlencoded({extended: false}));
+app.use(compression());
 
 app.get('/', (req,res) => {
     fs.readdir('./data', function(error, filelist){
@@ -89,7 +91,7 @@ app.get('/create', function(request, response){
 
 app.post('/create_process', function(request, response){
     
-    console.log('request.body: ',request.body);
+    //console.log('request.body: ',request.body);
     var post = request.body;
     var title = post.title;
     var description = post.description;
