@@ -19,9 +19,11 @@ app.get('/', function(req,res){
 });
 */
 
+app.use(express.static(__dirname +'/public'));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(compression());
 
+/******* 미들웨어 작성***********/
 // '*' 는 모든 URL 을 뜻함
 app.get('*', function(request, response, next){
     fs.readdir('./data', function(error, filelist){
@@ -29,26 +31,9 @@ app.get('*', function(request, response, next){
         next();
     });
 });
+/********************************/
 
-app.get('/', (req,res) => {
-    var title = 'Welcome';
-    var description = 'Hello, Node.js';
-    var list = template.list(req.list);
-    var html = template.HTML(title, list,
-      `<h2>${title}</h2>${description}`,
-      `<a href="/create">create</a>`
-    );
-    
-    /* Node.js 의 response 객체
-    res.writeHead(200);
-    res.end(html);
-    */
-    
-    // express 의 response 객체
-    res.status(200).send(html);
-    // 또는 res.send(html);
-    
-});
+
 
 app.get('/page/:pageId', function(request,response){
   
