@@ -33,30 +33,54 @@ app.get('*', function(request, response, next){
 });
 /********************************/
 
+app.get('/', (req,res) => {
+    var title = 'Welcome';
+    var description = 'Hello, Node.js';
+    var list = template.list(req.list);
+    var html = template.HTML(title, list,
+      `<h2>${title}</h2>${description}`,
+      `<a href="/create">create</a>`
+    );
+
+    /* Node.js 의 response 객체
+    res.writeHead(200);
+    res.end(html);
+    */
+
+    // express 의 response 객체
+    res.status(200).send(html);
+    // 또는 res.send(html);
+
+});
 
 
-app.get('/page/:pageId', function(request,response){
+app.get('/page/:pageId', function(request,response,next){
   
     //console.log(request.params);
     //console.log(request.list);
     var filteredId = path.parse(request.params.pageId).base;
     fs.readFile(`data/${filteredId}`, 'utf8', function(err, description){
-        var title = request.params.pageId;
-        var sanitizedTitle = sanitizeHtml(title);
-        var sanitizedDescription = sanitizeHtml(description, {
-        allowedTags:['h1']
-        });
-        var list = template.list(request.list);
-        var html = template.HTML(sanitizedTitle, list,
-        `<h2>${sanitizedTitle}</h2>${sanitizedDescription}`,
-        ` <a href="/create">create</a>
-          <a href="/update/${sanitizedTitle}">update</a>
-          <form action="/delete_process" method="post">
-            <input type="hidden" name="id" value="${sanitizedTitle}">
-            <input type="submit" value="delete">
-          </form>`
-        );
-        response.send(html);
+        if(err){
+            next(err);
+        }
+        else{
+            var title = request.params.pageId;
+            var sanitizedTitle = sanitizeHtml(title);
+            var sanitizedDescription = sanitizeHtml(description, {
+                allowedTags:['h1']
+            });
+            var list = template.list(request.list);
+            var html = template.HTML(sanitizedTitle, list,
+            `<h2>${sanitizedTitle}</h2>${sanitizedDescription}`,
+            ` <a href="/create">create</a>
+              <a href="/update/${sanitizedTitle}">update</a>
+              <form action="/delete_process" method="post">
+                <input type="hidden" name="id" value="${sanitizedTitle}">
+                <input type="submit" value="delete">
+              </form>`
+            );
+            response.send(html);
+        }
     });
 
 });
@@ -152,6 +176,17 @@ app.post('/delete_process', function(request, response){
       response.redirect(302, '/');
     });
 });
+
+app.use(function(req,res,next){
+   res.status(404).send("Sorry can't find that!"); 
+});
+
+
+app.use(function(err,req,res,next){
+   console.error(err.stack);
+   res.status(500).send('Someting broke!');
+});
+
 
 app.listen(8080, ()=> console.log('Example app listening at 8080 port'));
 
