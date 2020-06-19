@@ -3,6 +3,7 @@ var template = require('./lib/template.js');
 var qs = require('querystring');
 var bodyParser = require('body-parser');
 var compression = require('compression');
+var helmet = require('helmet');
 
 var topicRouter = require('./routes/topic');
 var indexRouter = require('./routes/index');
@@ -23,6 +24,7 @@ app.get('/', function(req,res){
 app.use(express.static(__dirname +'/public'));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(compression());
+app.use(helmet());
 
 
 /******* 미들웨어 작성***********/
