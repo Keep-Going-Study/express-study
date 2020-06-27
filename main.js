@@ -7,6 +7,7 @@ var helmet = require('helmet');
 
 var topicRouter = require('./routes/topic');
 var indexRouter = require('./routes/index');
+var authRouter = require('./routes/auth');
 
 const express = require('express');
 const app = express();
@@ -40,8 +41,7 @@ app.get('*', function(request, response, next){
 
 app.use('/', indexRouter);
 app.use('/topic', topicRouter);
-
-
+app.use('/auth', authRouter);
 
 
 app.use(function(req,res,next){
