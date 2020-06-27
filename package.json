@@ -26,10 +26,14 @@
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "helmet": "^3.23.1",
-    "sanitize-html": "^1.18.2"
+    "sanitize-html": "^1.18.2",
+    "session-file-store": "^1.4.0"
   },
   "nodemonConfig": {
-    "ignore": ["data/*", "sessions/*"],
+    "ignore": [
+      "data/*",
+      "sessions/*"
+    ],
     "delay": "500"
   }
 }
