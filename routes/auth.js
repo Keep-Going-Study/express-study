@@ -35,7 +35,9 @@ router.post('/login_process', function(request,response){
         //console.log(request.session);
         request.session.is_logined = true;
         request.session.nickname = authData.nickname;
-        response.redirect('/');
+        request.session.save(function(){
+            response.redirect('/');
+        });
     } else{
         response.send('Who?');
     }
