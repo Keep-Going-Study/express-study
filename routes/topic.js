@@ -5,10 +5,11 @@ var sanitizeHtml = require('sanitize-html');
 
 var express = require('express');
 var router = express.Router();
+var auth = require('../lib/auth_module.js');
 
-router.get('/create', function(request, response){
+router.get('/create', function(req, res){
     var title = 'WEB - create';
-    var list = template.list(request.list);
+    var list = template.list(req.list);
     var html = template.HTML(title, list, `
       <form action="/topic/create_process" method="post">
         <p><input type="text" name="title" placeholder="title"></p>
@@ -19,43 +20,44 @@ router.get('/create', function(request, response){
           <input type="submit">
         </p>
       </form>
-    `, '');
-    response.send(html);
+    `, '',
+    auth.SetAuthStatusUI(req,res));
+    res.send(html);
   
 });
 
-router.post('/create_process', function(request, response){
+router.post('/create_process', function(req, res){
     
-    //console.log('request.body: ',request.body);
-    var post = request.body;
+    //console.log('req.body: ',req.body);
+    var post = req.body;
     var title = post.title;
     var description = post.description;
     fs.writeFile(`data/${title}`, description, 'utf8', function(err){
-      response.redirect(302, `/topic/${title}`);
+      res.redirect(302, `/topic/${title}`);
     });
     
     /*
     var body = '';
-      request.on('data', function(data){
+      req.on('data', function(data){
           body = body + data;
       });
-      request.on('end', function(){
+      req.on('end', function(){
           var post = qs.parse(body);
           var title = post.title;
           var description = post.description;
           fs.writeFile(`data/${title}`, description, 'utf8', function(err){
-            response.redirect(302, `/page/${title}`);
+            res.redirect(302, `/page/${title}`);
           });
       });
     */
 });
 
-router.get('/update/:pageId', function(request, response){
+router.get('/update/:pageId', function(req, res){
     
-        var filteredId = path.parse(request.params.pageId).base;
+        var filteredId = path.parse(req.params.pageId).base;
         fs.readFile(`data/${filteredId}`, 'utf8', function(err, description){
-          var title = request.params.pageId;
-          var list = template.list(request.list);
+          var title = req.params.pageId;
+          var list = template.list(req.list);
           var html = template.HTML(title, list,
             `
             <form action="/topic/update_process" method="post">
@@ -69,51 +71,52 @@ router.get('/update/:pageId', function(request, response){
               </p>
             </form>
             `,
-            `<a href="/topic/create">create</a> <a href="/topic/update/${title}">update</a>`
+            `<a href="/topic/create">create</a> <a href="/topic/update/${title}">update</a>`,
+            auth.SetAuthStatusUI(req,res)
           );
-          response.send(html);
+          res.send(html);
         });
       
 });
 
-router.post('/update_process', function(request, response){
+router.post('/update_process', function(req, res){
     
-    var post = request.body;
+    var post = req.body;
     var id = post.id;
     var title = post.title;
     var description = post.description;
     fs.rename(`data/${id}`, `data/${title}`, function(error){
       fs.writeFile(`data/${title}`, description, 'utf8', function(err){
-        response.redirect(302, `/topic/${title}`);
+        res.redirect(302, `/topic/${title}`);
       });
     });
 });
 
-router.post('/delete_process', function(request, response){
-    var post = request.body;
+router.post('/delete_process', function(req, res){
+    var post = req.body;
     var id = post.id;
     var filteredId = path.parse(id).base;
     fs.unlink(`data/${filteredId}`, function(error){
-      response.redirect(302, '/');
+      res.redirect(302, '/');
     });
 });
 
-router.get('/:pageId', function(request,response,next){
+router.get('/:pageId', function(req,res,next){
   
-    //console.log(request.params);
-    //console.log(request.list);
-    var filteredId = path.parse(request.params.pageId).base;
+    //console.log(req.params);
+    //console.log(req.list);
+    var filteredId = path.parse(req.params.pageId).base;
     fs.readFile(`data/${filteredId}`, 'utf8', function(err, description){
         if(err){
             next(err);
         }
         else{
-            var title = request.params.pageId;
+            var title = req.params.pageId;
             var sanitizedTitle = sanitizeHtml(title);
             var sanitizedDescription = sanitizeHtml(description, {
                 allowedTags:['h1']
             });
-            var list = template.list(request.list);
+            var list = template.list(req.list);
             var html = template.HTML(sanitizedTitle, list,
             `<h2>${sanitizedTitle}</h2>${sanitizedDescription}`,
             ` <a href="/topic/create">create</a>
@@ -121,9 +124,10 @@ router.get('/:pageId', function(request,response,next){
               <form action="/topic/delete_process" method="post">
                 <input type="hidden" name="id" value="${sanitizedTitle}">
                 <input type="submit" value="delete">
-              </form>`
+              </form>`,
+              auth.SetAuthStatusUI(req,res)
             );
-            response.send(html);
+            res.send(html);
         }
     });
 
