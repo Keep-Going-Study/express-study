@@ -6,6 +6,8 @@ var compression = require('compression');
 var helmet = require('helmet');
 var session = require('express-session')
 var FileStore = require('session-file-store')(session);
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
 
 var topicRouter = require('./routes/topic');
 var indexRouter = require('./routes/index');
@@ -34,6 +36,8 @@ app.use(session({   // session 미들웨어 장착
   saveUninitialized: true,
   store: new FileStore()
 }))
+
+
 
 
 /******* 미들웨어 작성***********/
