@@ -6,6 +6,12 @@ var sanitizeHtml = require('sanitize-html');
 var express = require('express');
 var router = express.Router();
 
+var authData = {
+    email: 'chs98105@gmail.com',
+    password: '9815',
+    nickname: 'soul'
+};
+
 router.get('/login', function(request,response){
     var title = 'WEB - login';
     var list = template.list(request.list);
@@ -18,6 +24,18 @@ router.get('/login', function(request,response){
                     </form>
                 `,'');
     response.send(html);
+});
+
+router.post('/login_process', function(request,response){
+    var post = request.body;
+    var email = post.email;
+    var password = post.pwd;
+    
+    if(email === authData.email && password === authData.password){
+        response.send('Welcome!');
+    } else{
+        response.send('Who?');
+    }
 });
 
 module.exports = router;
