@@ -4,6 +4,8 @@ var qs = require('querystring');
 var bodyParser = require('body-parser');
 var compression = require('compression');
 var helmet = require('helmet');
+var session = require('express-session')
+var FileStore = require('session-file-store')(session);
 
 var topicRouter = require('./routes/topic');
 var indexRouter = require('./routes/index');
@@ -26,6 +28,12 @@ app.use(express.static(__dirname +'/public'));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(compression());
 app.use(helmet());
+app.use(session({   // session 미들웨어 장착
+  secret: '@#@$MYSIGN#@$#$',
+  resave: false,
+  saveUninitialized: true,
+  store: new FileStore()
+}))
 
 
 /******* 미들웨어 작성***********/

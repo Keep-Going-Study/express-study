@@ -6,7 +6,7 @@ var sanitizeHtml = require('sanitize-html');
 var express = require('express');
 var router = express.Router();
 
-var authData = {
+var authData = {    // 실제에서는 DB에 저장해야함
     email: 'chs98105@gmail.com',
     password: '9815',
     nickname: 'soul'
@@ -32,7 +32,10 @@ router.post('/login_process', function(request,response){
     var password = post.pwd;
     
     if(email === authData.email && password === authData.password){
-        response.send('Welcome!');
+        //console.log(request.session);
+        request.session.is_logined = true;
+        request.session.nickname = authData.nickname;
+        response.redirect('/');
     } else{
         response.send('Who?');
     }
