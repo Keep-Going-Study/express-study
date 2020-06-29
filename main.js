@@ -37,7 +37,11 @@ app.use(session({   // session 미들웨어 장착
   store: new FileStore()
 }))
 
-
+var authData = {    // 실제에서는 DB에 저장해야함
+    email: 'chs98105@gmail.com',
+    password: '9815',
+    nickname: 'soul'
+};
 
 
 /******* 미들웨어 작성***********/
@@ -51,7 +55,41 @@ app.get('*', function(req, res, next){
 });
 /********************************/
 
+passport.use(new LocalStrategy(
+    
+    {
+          usernameField: 'email',
+          passwordField: 'pwd'
+    },
+    function(username, password, done) {
+        console.log('LocalStrategy', username, password);
+        if(username === authData.email){
+            console.log(1);
+            if(password === authData.password){
+                console.log(2);
+                return done(null, authData);
+            }
+            else{
+                console.log(3);
+                return done(null, false, {
+                    message: 'Incorrect password'
+                });
+            }
+        }
+        else{
+            console.log(4);
+            return done(null, false, {
+                message: 'Incorrect username'
+            });
+        }
+    }
+));
 
+app.post('/auth/login_process',
+    passport.authenticate('local', {
+    successRedirect: '/',
+    failureRedirect: '/auth/login'
+  }));
 
 app.use('/', indexRouter);
 app.use('/topic', topicRouter);
