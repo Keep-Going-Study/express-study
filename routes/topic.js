@@ -9,7 +9,7 @@ var auth = require('../lib/auth_module.js');
 
 router.get('/create', function(req, res){
     if(!auth.IsOwner(req,res)){
-       res.redirect('/'); 
+       res.redirect('/auth/login'); 
        return false;
     }
     var title = 'WEB - create';
@@ -32,7 +32,7 @@ router.get('/create', function(req, res){
 
 router.post('/create_process', function(req, res){
     if(!auth.IsOwner(req,res)){
-       res.redirect('/'); 
+       res.redirect('/auth/login'); 
        return false;
     }
     //console.log('req.body: ',req.body);
@@ -61,7 +61,7 @@ router.post('/create_process', function(req, res){
 
 router.get('/update/:pageId', function(req, res){
     if(!auth.IsOwner(req,res)){
-       res.redirect('/'); 
+       res.redirect('/auth/login'); 
        return false;
     }
     var filteredId = path.parse(req.params.pageId).base;
@@ -91,7 +91,7 @@ router.get('/update/:pageId', function(req, res){
 
 router.post('/update_process', function(req, res){
     if(!auth.IsOwner(req,res)){
-       res.redirect('/'); 
+       res.redirect('/auth/login');  
        return false;
     }
     var post = req.body;
@@ -107,7 +107,7 @@ router.post('/update_process', function(req, res){
 
 router.post('/delete_process', function(req, res){
     if(!auth.IsOwner(req,res)){
-       res.redirect('/'); 
+       res.redirect('/auth/login');  
        return false;
     }
     var post = req.body;
@@ -120,7 +120,7 @@ router.post('/delete_process', function(req, res){
 
 router.get('/:pageId', function(req,res,next){
     if(!auth.IsOwner(req,res)){
-       res.redirect('/'); 
+       res.redirect('/auth/login'); 
        return false;
     }
   
