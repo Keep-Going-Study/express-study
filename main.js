@@ -30,12 +30,14 @@ app.use(express.static(__dirname +'/public'));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(compression());
 app.use(helmet());
+/*
 app.use(session({   // session 미들웨어 장착
   secret: '@#@$MYSIGN#@$#$',
   resave: false,
   saveUninitialized: true,
   store: new FileStore()
 }))
+*/
 
 var authData = {    // 실제에서는 DB에 저장해야함
     email: 'chs98105@gmail.com',
@@ -55,6 +57,12 @@ app.get('*', function(req, res, next){
 });
 /********************************/
 
+app.post('/auth/login_process',
+    passport.authenticate('local', {
+    successRedirect: '/',
+    failureRedirect: '/auth/login'
+  }));
+  
 passport.use(new LocalStrategy(
     
     {
@@ -85,11 +93,7 @@ passport.use(new LocalStrategy(
     }
 ));
 
-app.post('/auth/login_process',
-    passport.authenticate('local', {
-    successRedirect: '/',
-    failureRedirect: '/auth/login'
-  }));
+
 
 app.use('/', indexRouter);
 app.use('/topic', topicRouter);
