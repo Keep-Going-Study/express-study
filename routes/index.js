@@ -6,6 +6,7 @@ var auth = require('../lib/auth_module.js');
 
 
 router.get('/', (req,res) => {
+    console.log('/ req.user', req.user);
     var title = 'Welcome';
     var description = 'Hello, Node.js';
     var list = template.list(req.list);
