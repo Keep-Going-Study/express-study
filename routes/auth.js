@@ -28,27 +28,10 @@ router.get('/login', function(req,res){
     res.send(html);
 });
 
-/*
-router.post('/login_process', function(req,res){
-    var post = req.body;
-    var email = post.email;
-    var password = post.pwd;
-    
-    if(email === authData.email && password === authData.password){
-        //console.log(req.session);
-        req.session.is_logined = true;
-        req.session.nickname = authData.nickname;
-        req.session.save(function(){
-            res.redirect('/');
-        });
-    } else{
-        res.send('Who?');
-    }
-});
-*/
 
 router.get('/logout', function(req,res){
-    req.session.destroy(function(err){
+    req.logout();
+    req.session.save(function(){
         res.redirect('/');
     });
 });

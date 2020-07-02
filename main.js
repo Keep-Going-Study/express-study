@@ -114,8 +114,6 @@ app.post('/auth/login_process',
   }));
   
 
-
-
 app.use('/', indexRouter);
 app.use('/topic', topicRouter);
 app.use('/auth', authRouter);
