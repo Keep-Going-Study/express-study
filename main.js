@@ -6,6 +6,7 @@ var compression = require('compression');
 var helmet = require('helmet');
 var session = require('express-session')
 var FileStore = require('session-file-store')(session);
+var flash = require('connect-flash');
 
 
 var topicRouter = require('./routes/topic');
@@ -36,6 +37,19 @@ app.use(session({   // session 미들웨어 장착
   saveUninitialized: true,
   store: new FileStore()
 }));
+
+app.use(flash());
+
+app.get('/flash',function(req,res){
+    req.flash('msg','Flash is back!!'); // session에 데이터 삽입
+    res.send('flash');
+});
+
+app.get('/flash-display', function(req,res){
+    var fmsg = req.flash();
+    console.log('fmsg : ',fmsg);
+    res.send(fmsg);
+});
 
 
 var authData = {    // 실제에서는 DB에 저장해야함
