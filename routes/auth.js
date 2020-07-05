@@ -6,15 +6,9 @@ var sanitizeHtml = require('sanitize-html');
 var express = require('express');
 var router = express.Router();
 
-/*
-var authData = {    // 실제에서는 DB에 저장해야함
-    email: 'chs98105@gmail.com',
-    password: '9815',
-    nickname: 'soul'
-};
-*/
-
-router.get('/login', function(req,res){
+module.exports = function(passport){
+    
+    router.get('/login', function(req,res){
     
     var fmsg = req.flash();
     var feedback = '';
@@ -33,14 +27,25 @@ router.get('/login', function(req,res){
                     </form>
                 `,'');
     res.send(html);
-});
-
-
-router.get('/logout', function(req,res){
-    req.logout();
-    req.session.save(function(){
-        res.redirect('/');
     });
-});
+    
+    router.post('/login_process',
+        passport.authenticate('local', {
+            successRedirect: '/',
+            failureRedirect: '/auth/login',
+            failureFlash:true,
+            successFlash:true
+        })
+     );
 
-module.exports = router;
+    router.get('/logout', function(req,res){
+        req.logout();
+        req.session.save(function(){
+            res.redirect('/');
+        });
+    });
+    
+    return router;
+}
+
+
