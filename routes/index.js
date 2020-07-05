@@ -7,11 +7,18 @@ var auth = require('../lib/auth_module.js');
 
 router.get('/', (req,res) => {
     console.log('/ req.user :', req.user);
+    var fmsg = req.flash();
+    var feedback = '';
+    if(fmsg.success){
+        feedback = fmsg.success[0];
+    }
+    
     var title = 'Welcome';
     var description = 'Hello, Node.js';
     var list = template.list(req.list);
     var html = template.HTML(title, list,
-      `<h2>${title}</h2>${description}
+      `<br></br><div style="color:blue;">${feedback}</div>
+      <h2>${title}</h2>${description}
       <img src="/images/welcome.jpg" style="width:300px; 
       display:block; margin-top:10px;">`,
       `<a href="/topic/create">create</a>`,

@@ -89,20 +89,22 @@ passport.use(new LocalStrategy(
             //console.log(1);
             if(password === authData.password){
                 //console.log(2);
-                return done(null, authData);    
+                return done(null, authData, {
+                    message: 'Login Success'
+                });    
                 // 로그인 성공 후에는 serializeUser() 가 실행된다.
             }
             else{
                 //console.log(3);
                 return done(null, false, {
-                    message: 'Incorrect password'
+                    message: 'Incorrect password' // Flash message 의 내용으로 넘어감
                 });
             }
         }
         else{
             console.log(4);
             return done(null, false, {
-                message: 'Incorrect username'
+                message: 'Incorrect username' // Flash message 의 내용으로 넘어감
             });
         }
     }
@@ -124,7 +126,9 @@ passport.deserializeUser(function(user,done){
 app.post('/auth/login_process',
     passport.authenticate('local', {
     successRedirect: '/',
-    failureRedirect: '/auth/login'
+    failureRedirect: '/auth/login',
+    failureFlash:true,
+    successFlash:true
   }));
   
 

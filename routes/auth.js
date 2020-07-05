@@ -15,10 +15,17 @@ var authData = {    // 실제에서는 DB에 저장해야함
 */
 
 router.get('/login', function(req,res){
+    
+    var fmsg = req.flash();
+    var feedback = '';
+    if(fmsg.error){
+        feedback = fmsg.error[0];
+    }
+    
     var title = 'WEB - login';
     var list = template.list(req.list);
     var html = template.HTML(title,list, 
-                `
+                `   <div style="color:red;">${feedback}</div>
                     <form action="/auth/login_process" method="post">
                         <p><input type="text" name="email" placeholder="email"></p>
                         <p><input type="password" name="pwd" placeholder="password"></p>
