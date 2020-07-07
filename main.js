@@ -11,11 +11,11 @@ var session = require('express-session')
 var FileStore = require('session-file-store')(session);
 var flash = require('connect-flash');
 
-var passport = require('./lib/passport_module')(app);
+
 
 var topicRouter = require('./routes/topic');
 var indexRouter = require('./routes/index');
-var authRouter = require('./routes/auth')(passport);
+
 
 
 
@@ -40,6 +40,9 @@ app.use(session({   // session 미들웨어 장착
   saveUninitialized: true,
   store: new FileStore()
 }));
+
+var passport = require('./lib/passport_module')(app);
+var authRouter = require('./routes/auth')(passport);
 
 app.use(flash());
 
