@@ -73,8 +73,6 @@ app.get('*', function(req, res, next){
 /********************************/
 
 
-
-
 app.use('/', indexRouter);
 app.use('/topic', topicRouter);
 app.use('/auth', authRouter);
