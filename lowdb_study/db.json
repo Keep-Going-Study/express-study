@@ -8,7 +8,7 @@
     },
     {
       "id": 2,
-      "title": "mysql",
+      "title": "MySQL & MariaDB",
       "description": "mysql is ...",
       "author": 1
     }

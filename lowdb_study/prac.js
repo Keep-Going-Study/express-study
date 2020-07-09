@@ -29,3 +29,7 @@ db.get('topic').push({
 
 console.log(db.get('topic').value());
 console.log(db.get('topic').find({title:'lowdb', author:1}).value());
+
+db.get('topic').find({id:2}).assign({
+    title:'MySQL & MariaDB'
+}).write();
