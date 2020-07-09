@@ -1,4 +1,23 @@
 {
-  "topic": [],
-  "author": []
+  "topic": [
+    {
+      "id": 1,
+      "title": "lowdb",
+      "description": "lowdb is ...",
+      "author": 1
+    },
+    {
+      "id": 2,
+      "title": "mysql",
+      "description": "mysql is ...",
+      "author": 1
+    }
+  ],
+  "author": [
+    {
+      "id": 1,
+      "name": "egoing",
+      "profile": "developer"
+    }
+  ]
 }
