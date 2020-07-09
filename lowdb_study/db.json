@@ -5,12 +5,6 @@
       "title": "lowdb",
       "description": "lowdb is ...",
       "author": 1
-    },
-    {
-      "id": 2,
-      "title": "MySQL & MariaDB",
-      "description": "mysql is ...",
-      "author": 1
     }
   ],
   "author": [

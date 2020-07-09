@@ -27,9 +27,21 @@ db.get('topic').push({
 }).write();
 */
 
-console.log(db.get('topic').value());
-console.log(db.get('topic').find({title:'lowdb', author:1}).value());
 
-db.get('topic').find({id:2}).assign({
-    title:'MySQL & MariaDB'
-}).write();
+// 데이터 읽기
+console.log(db.get('topic').value());
+console.log(db.get('topic').find({'title':'lowdb', 'author':1}).value());
+
+// 데이터 수정
+/*
+db.get('topic')
+    .find({'id':2})
+    .assign({'title':'MySQL & MariaDB'})
+    .write();
+*/
+
+
+// 데이터 삭제
+db.get('topic')
+    .remove({'id':2})
+    .write();
