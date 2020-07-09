@@ -5,6 +5,7 @@ const db = low(adapter);
 
 db.defaults({ topic: [], author: [] }).write();
 
+/*
 db.get('author').push({
     id:1,
     name:'egoing',
@@ -24,3 +25,7 @@ db.get('topic').push({
     description: 'mysql is ...',
     author: 1
 }).write();
+*/
+
+console.log(db.get('topic').value());
+console.log(db.get('topic').find({title:'lowdb', author:1}).value());
