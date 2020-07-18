@@ -38,6 +38,24 @@ module.exports = function(passport){
             successFlash:true
         })
      );
+     
+    router.get('/register', function(req,res){
+    
+        var title = 'WEB - Register';
+        var list = template.list(req.list);
+        var html = template.HTML(title,list, 
+                    `  
+                        <form action="/auth/login_process" method="post">
+                            <p><input type="text" name="email" placeholder="email"></p>
+                            <p><input type="password" name="pwd" placeholder="password"></p>
+                            <p><input type="password" name="pwd2" placeholder="password check"></p>
+                            <p><input type="text" name="displayName" placeholder="Nickname"></p>
+                            <p><input type="submit" value="register"></p>
+                        </form>
+                    `,'');
+        res.send(html);
+    });
+     
 
     router.get('/logout', function(req,res){
         req.logout();
