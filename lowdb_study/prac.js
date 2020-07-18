@@ -2,6 +2,7 @@ const low = require('lowdb');
 const FileSync = require('lowdb/adapters/FileSync');
 const adapter = new FileSync('db.json');
 const db = low(adapter);
+const shortid = require('shortid');
 
 db.defaults({ topic: [], author: [] }).write();
 
@@ -42,6 +43,26 @@ db.get('topic')
 
 
 // 데이터 삭제
+/*
 db.get('topic')
     .remove({'id':2})
     .write();
+*/
+
+var sid = shortid.generate();
+
+db.get('author')
+    .push({
+        id:sid,     // sid 는 위에서 생성한 shortid(id 식별자) 이다.
+        name:'taeho',
+        profile:'data scientist'
+    }).write();
+    
+db.get('topic')
+    .push({
+        id:shortid.generate(),
+        title:'PostgreSQL',
+        description:'PostgreSQL is ...',
+        author: sid // author 테이블과 연결하기 위함
+    }).write();
+
