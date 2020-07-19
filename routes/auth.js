@@ -6,6 +6,8 @@ var sanitizeHtml = require('sanitize-html');
 var express = require('express');
 var router = express.Router();
 
+var shortid = require('shortid');
+
 var low = require('lowdb');
 var FileSync = require('lowdb/adapters/FileSync');
 var adapter = new FileSync('db.json');
@@ -47,10 +49,15 @@ module.exports = function(passport){
      
     router.get('/register', function(req,res){
     
+        var fmsg = req.flash();
+        var feedback = '';
+        if(fmsg.error){
+            feedback = fmsg.error[0];
+        }
         var title = 'WEB - Register';
         var list = template.list(req.list);
         var html = template.HTML(title,list, 
-                    `  
+                    `   <div style="color:red;">${feedback}</div>
                         <form action="/auth/register_process" method="post">
                             <p><input type="text" name="email" placeholder="email" value="chs98105@gmail.com"></p>
                             <p><input type="password" name="pwd" placeholder="password" value="9815"></p>
@@ -69,13 +76,23 @@ module.exports = function(passport){
        var pwd2 = post.pwd2;
        var displayName = post.displayName;
        
-       db.get('users').push({
-           email:email,
-           password:pwd,
-           displayName:displayName
-       }).write();
+       if(pwd !== pwd2){
+            req.flash('error','Password must same!');
+            res.redirect('/auth/register');
+       } 
+       else{
+            db.get('users').push({
+                id:shortid.generate(),
+                email:email,
+                password:pwd,
+                displayName:displayName
+            }).write();
        
-       res.redirect('/');
+            res.redirect('/');
+           
+       }
+       
+       
     });
 
     router.get('/logout', function(req,res){
