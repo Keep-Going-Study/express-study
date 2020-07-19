@@ -5,6 +5,12 @@
       "email": "chs98105@gmail.com",
       "password": "9815",
       "displayName": "soul"
+    },
+    {
+      "id": "7BBMO6rcu",
+      "email": "chs98105@gmail.com",
+      "password": "9815",
+      "displayName": "soul"
     }
   ],
   "topics": [
@@ -13,6 +19,12 @@
       "title": "db test",
       "description": "This is db test",
       "user_id": "gYEVPjD2M"
+    },
+    {
+      "id": "0chdWOpCI",
+      "title": "Nodejs ",
+      "description": "Nodejs is so fun",
+      "user_id": "7BBMO6rcu"
     }
   ]
 }

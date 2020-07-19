@@ -11,11 +11,10 @@ var session = require('express-session')
 var FileStore = require('session-file-store')(session);
 var flash = require('connect-flash');
 
-
-
 var topicRouter = require('./routes/topic');
 var indexRouter = require('./routes/index');
 
+var db = require('./lib/db');
 
 
 
@@ -65,10 +64,8 @@ app.get('/flash-display', function(req,res){
 // '*' 는 모든 URL 을 뜻함
 // 이 라우터는 맨 위에 있어야함
 app.get('*', function(req, res, next){
-    fs.readdir('./data', function(error, filelist){
-        req.list = filelist;
-        next();
-    });
+    req.list = db.get('topics').value();
+    next();
 });
 /********************************/
 
