@@ -37,7 +37,8 @@
   "nodemonConfig": {
     "ignore": [
       "data/*",
-      "sessions/*"
+      "sessions/*",
+      "db.json"
     ],
     "delay": "500"
   }
