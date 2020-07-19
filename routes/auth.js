@@ -5,15 +5,8 @@ var sanitizeHtml = require('sanitize-html');
 
 var express = require('express');
 var router = express.Router();
-
+var db = require('../lib/db');
 var shortid = require('shortid');
-
-var low = require('lowdb');
-var FileSync = require('lowdb/adapters/FileSync');
-var adapter = new FileSync('db.json');
-var db = low(adapter);
-
-db.defaults({users:[]}).write();
 
 module.exports = function(passport){
     
@@ -81,14 +74,17 @@ module.exports = function(passport){
             res.redirect('/auth/register');
        } 
        else{
-            db.get('users').push({
+            var user={
                 id:shortid.generate(),
                 email:email,
                 password:pwd,
                 displayName:displayName
-            }).write();
+            };
+            db.get('users').push(user).write();
        
-            res.redirect('/');
+            req.login(user,function(err){
+                return res.redirect('/');
+            });
            
        }
        
