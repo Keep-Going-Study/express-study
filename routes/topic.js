@@ -143,13 +143,6 @@ router.post('/update_process', function(req, res){
     
     }
     
-    /*
-    fs.rename(`data/${id}`, `data/${title}`, function(error){
-      fs.writeFile(`data/${title}`, description, 'utf8', function(err){
-        res.redirect(302, `/topic/${title}`);
-      });
-    });
-    */
 });
 
 router.post('/delete_process', function(req, res){
@@ -199,6 +192,7 @@ router.get('/:pageId', function(req,res,next){
     ` <a href="/topic/create">create</a>
     
       <a href="/topic/update/${topic.id}">update</a>
+      
       <form action="/topic/delete_process" method="post">
         <input type="hidden" name="id" value="${sanitizedTitle}">
         <input type="submit" value="delete">
