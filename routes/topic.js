@@ -71,18 +71,29 @@ router.post('/create_process', function(req, res){
 });
 
 router.get('/update/:pageId', function(req, res){
+    
+    // 비로그인 유저일때 접근 통제
     if(!auth.IsOwner(req,res)){
        res.redirect('/auth/login'); 
        return false;
     }
-    var filteredId = path.parse(req.params.pageId).base;
-    fs.readFile(`data/${filteredId}`, 'utf8', function(err, description){
-      var title = req.params.pageId;
-      var list = template.list(req.list);
-      var html = template.HTML(title, list,
+    
+    var topic = db.get('topics').find({
+        'id':req.params.pageId
+    }).value();
+    
+    // 해당 유저가 글 작성자가 아니면 수정 페이지 접근 통제
+    if(topic.user_id !== req.user.id){
+        req.flash('error','Not yours!');
+        return res.redirect('/');
+    }
+    var title = topic.title;
+    var description = topic.description;
+    var list = template.list(req.list);
+    var html = template.HTML(title, list,
         `
         <form action="/topic/update_process" method="post">
-          <input type="hidden" name="id" value="${title}">
+          <input type="hidden" name="id" value="${topic.id}">
           <p><input type="text" name="title" placeholder="title" value="${title}"></p>
           <p>
             <textarea name="description" placeholder="description">${description}</textarea>
@@ -92,11 +103,11 @@ router.get('/update/:pageId', function(req, res){
           </p>
         </form>
         `,
-        `<a href="/topic/create">create</a> <a href="/topic/update/${title}">update</a>`,
+        `<a href="/topic/create">create</a> <a href="/topic/update/${topic.id}">update</a>`,
         auth.SetAuthStatusUI(req,res)
       );
       res.send(html);
-    });
+    
       
 });
 
@@ -109,11 +120,36 @@ router.post('/update_process', function(req, res){
     var id = post.id;
     var title = post.title;
     var description = post.description;
+    
+    var topic = db.get('topics').find({
+        'id': id
+    }).value();
+    
+    // 작성자가 아니면 접근 통제하고 홈으로 리다이렉트
+    if(topic.user_id !== req.user.id){
+        req.flash('error','Not yours!');
+        return res.redirect('/');
+    }
+    
+    // 수정해주고 수정된 글로 리다이렉트
+    else{
+        db.get('topics')
+            .find({'id':id})
+            .assign({'title':title,
+                     'description':description
+            }).write();
+        
+        res.redirect(`/topic/${topic.id}`);
+    
+    }
+    
+    /*
     fs.rename(`data/${id}`, `data/${title}`, function(error){
       fs.writeFile(`data/${title}`, description, 'utf8', function(err){
         res.redirect(302, `/topic/${title}`);
       });
     });
+    */
 });
 
 router.post('/delete_process', function(req, res){
@@ -130,6 +166,7 @@ router.post('/delete_process', function(req, res){
 });
 
 // 글 읽기
+// :pageId 는 topic 의 id 값
 router.get('/:pageId', function(req,res,next){
     if(!auth.IsOwner(req,res)){
        res.redirect('/auth/login'); 
@@ -161,7 +198,7 @@ router.get('/:pageId', function(req,res,next){
     `,
     ` <a href="/topic/create">create</a>
     
-      <a href="/topic/update/${sanitizedTitle}">update</a>
+      <a href="/topic/update/${topic.id}">update</a>
       <form action="/topic/delete_process" method="post">
         <input type="hidden" name="id" value="${sanitizedTitle}">
         <input type="submit" value="delete">

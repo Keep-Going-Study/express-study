@@ -12,7 +12,9 @@ router.get('/', (req,res) => {
     if(fmsg.success){
         feedback = fmsg.success[0];
     }
-    
+    if(fmsg.error){
+        feedback = fmsg.error[0];
+    }
     var title = 'Welcome';
     var description = 'Hello, Node.js';
     var list = template.list(req.list);
