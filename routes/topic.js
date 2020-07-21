@@ -152,10 +152,18 @@ router.post('/delete_process', function(req, res){
     }
     var post = req.body;
     var id = post.id;
-    var filteredId = path.parse(id).base;
-    fs.unlink(`data/${filteredId}`, function(error){
-      res.redirect(302, '/');
-    });
+    
+    var topic = db.get('topics').find({'id':id}).value();
+    
+    if(topic.user_id !== req.user.id){
+        req.flash('error','Not yours!');
+        return res.redirect('/');
+    }
+    else{
+        db.get('topics').remove({'id':id}).write();
+        req.flash('success','Delete Complete');
+        res.redirect('/');
+    }
 });
 
 // 글 읽기
@@ -194,7 +202,7 @@ router.get('/:pageId', function(req,res,next){
       <a href="/topic/update/${topic.id}">update</a>
       
       <form action="/topic/delete_process" method="post">
-        <input type="hidden" name="id" value="${sanitizedTitle}">
+        <input type="hidden" name="id" value="${topic.id}">
         <input type="submit" value="delete">
       </form>`,
       auth.SetAuthStatusUI(req,res)
