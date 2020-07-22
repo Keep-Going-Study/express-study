@@ -24,7 +24,7 @@ router.get('/', (req,res) => {
       <img src="/images/welcome.jpg" style="width:300px; 
       display:block; margin-top:10px;">`,
       `<a href="/topic/create">create</a>`,
-      auth.SetAuthStatusUI(req,res)
+      auth.SetAuthStatusUI(req,res) 
     );
 
     /* Node.js 의 response 객체

@@ -9,6 +9,8 @@ var db = require('../lib/db');
 var shortid = require('shortid');
 var bcrypt = require('bcrypt');
 
+
+
 module.exports = function(passport){
     
     router.get('/login', function(req,res){
@@ -54,12 +56,14 @@ module.exports = function(passport){
         var html = template.HTML(title,list, 
                     `   <div style="color:red;">${feedback}</div>
                         <form action="/auth/register_process" method="post">
-                            <p><input type="text" name="email" placeholder="email" value="chs98105@gmail.com"></p>
-                            <p><input type="password" name="pwd" placeholder="password" value="9815"></p>
-                            <p><input type="password" name="pwd2" placeholder="password check" value="9815"></p>
-                            <p><input type="text" name="displayName" placeholder="Nickname" value="soul"></p>
+                            <p><input type="text" name="email" placeholder="email"></p>
+                            <p><input type="password" name="pwd" placeholder="password"></p>
+                            <p><input type="password" name="pwd2" placeholder="password check">
+                                <span id='pwCheck' style='margin-left:10px'></span</p>
+                            <p><input type="text" name="displayName" placeholder="Nickname"></p>
                             <p><input type="submit" value="register"></p>
                         </form>
+                        <script src='/js/pwd_check.js'></script>
                     `,'');
         res.send(html);
     });
