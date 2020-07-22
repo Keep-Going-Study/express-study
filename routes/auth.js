@@ -7,12 +7,14 @@ var express = require('express');
 var router = express.Router();
 var db = require('../lib/db');
 var shortid = require('shortid');
+var bcrypt = require('bcrypt');
 
 module.exports = function(passport){
     
     router.get('/login', function(req,res){
     
     var fmsg = req.flash();
+    console.log(fmsg);
     var feedback = '';
     if(fmsg.error){
         feedback = fmsg.error[0];
@@ -74,19 +76,24 @@ module.exports = function(passport){
             res.redirect('/auth/register');
        } 
        else{
-            var user={
-                id:shortid.generate(),
-                email:email,
-                password:pwd,
-                displayName:displayName
-            };
-            db.get('users').push(user).write();
-       
-            req.login(user,function(err){
-                return res.redirect('/');
-            });
            
-       }
+            bcrypt.hash(pwd,10,function(err,hash_pw){
+                
+                var user={
+                    id:shortid.generate(),
+                    email:email,
+                    password:hash_pw,   // hash 처리된 비밀번호를 DB에 저장한다.
+                    displayName:displayName
+                };
+                
+                db.get('users').push(user).write();
+           
+                req.login(user,function(err){
+                    return res.redirect('/');
+                });
+            })
+            
+         }
        
        
     });

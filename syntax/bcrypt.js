@@ -4,6 +4,7 @@ const myPlaintextPassword = '111111';
 const someOtherPlaintextPassword = '222222';
 
 bcrypt.hash(myPlaintextPassword, saltRounds, function(err,hash_pw){
+    // Store hash in your password DB.
     console.log(hash_pw);
     
     bcrypt.compare(myPlaintextPassword, hash_pw, function(err, result1){
