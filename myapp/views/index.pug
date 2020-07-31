@@ -1,5 +1,10 @@
-extends layout
-
-block content
-  h1= title
-  p Welcome to #{title}
+doctype html
+html
+    head
+        meta(charset='utf-8')
+        title Welcome
+    body    
+    if req.user
+        header Hi #{req.displayName} | logout
+    else
+        header Hi #{req.displayName} | login
