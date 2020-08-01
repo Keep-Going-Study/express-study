@@ -6,7 +6,6 @@ var auth = require('../lib/auth_module.js');
 
 
 router.get('/', (req,res) => {
-    
     console.log('/ req.user :', req.user);
     var fmsg = req.flash();
     var feedback = '';
@@ -27,8 +26,6 @@ router.get('/', (req,res) => {
       `<a href="/topic/create">create</a>`,
       auth.SetAuthStatusUI(req,res) 
     );
-    
-    
 
     /* Node.js 의 response 객체
     res.writeHead(200);
@@ -39,9 +36,6 @@ router.get('/', (req,res) => {
     res.status(200).send(html);
     // 또는 res.send(html);
 
-    
- 
-    
 });
 
 module.exports = router;

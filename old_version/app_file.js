@@ -12,11 +12,24 @@ app.get('/topic/new', function(req,res){
     res.render('new.pug');
 });
 
+app.get('/topic',function(req,res){
+    fs.readdir('data',function(err, files){
+        if(err){
+            console.log(err);
+            res.status(500).send('Server Error');
+        }
+        else
+            res.render('view.pug', {topics:files});
+    })
+    
+})
+
 app.post('/topic',function(req,res){
     var title= req.body.title;
     var description = req.body.description;
     fs.writeFile(`data/${title}`, description, function(err){
         if(err){
+            console.log(err);
             res.status(500).send('Server Error');
         }
         else

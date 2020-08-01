@@ -31,9 +31,7 @@ app.get('/', function(req,res){
 app.use(express.static(__dirname +'/public'));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(compression());
-app.use(helmet());// view engine setup
-//app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
+app.use(helmet());
 
 app.use(session({   // session 미들웨어 장착
   secret: '@#@$MYSIGN#@$#$',
