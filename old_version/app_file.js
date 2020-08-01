@@ -2,11 +2,36 @@ var express = require('express');
 var app = express();
 var bodyParser= require('body-parser');
 var fs = require("fs");
+var multer = require('multer'); // 
+
+var _storage = multer.diskStorage({
+    destination: function(req,file,cb){ // cb : callback
+        cb(null, './uploads/')
+    },
+    filename: function(req,file,cb){ 
+        cb(null,file.originalname);
+    }
+});
+var upload = multer({storage: _storage}); 
+
+
 
 app.use(bodyParser.urlencoded({extended: false}));
 
 app.set('views','./views_file');
 app.set('view engine', 'pug');
+
+app.get('/upload',function(req,res){
+    res.render('upload.pug')
+});
+
+app.post('/upload', upload.single('userfile'), function(req,res){
+    /* upload.single('userfile') 미들웨어의 역할 : 제출된 form 데이터에
+        파일이 포함돼있다면, req.file 프로퍼티를 추가한다.
+        userfile 은 form 양식에서의 name 값이다.
+    */
+    res.send(`Uploaded : ${req.file.filename}`);
+})
 
 app.get('/topic/new', function(req,res){
     fs.readdir('data',function(err, files){
