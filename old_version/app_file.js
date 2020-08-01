@@ -9,20 +9,37 @@ app.set('views','./views_file');
 app.set('view engine', 'pug');
 
 app.get('/topic/new', function(req,res){
-    res.render('new.pug');
+    fs.readdir('data',function(err, files){
+        res.render('new.pug', {topics:files});
+    });
 });
 
-app.get('/topic',function(req,res){
+app.get( ['/topic', '/topic/:topic_title'], function(req,res){
     fs.readdir('data',function(err, files){
-        if(err){
-            console.log(err);
-            res.status(500).send('Server Error');
+        var topic_title = req.params.topic_title;
+        if(topic_title){ // topic 페이지 접속 시
+                fs.readdir('data',function(err, files){
+                fs.readFile(`data/${topic_title}`, 'utf8', function(err,data){
+                    res.render('view.pug', {topics:files, 
+                                            title:topic_title,
+                                            description:data
+                                            });
+                    });
+                    
+            });    
         }
-        else
-            res.render('view.pug', {topics:files});
-    })
-    
-})
+        
+        else{ // topic_title 값 없을 시
+            res.render('view.pug', {topics:files,
+                                    title: 'Welcome',
+                                    description: "Hello Node.js"
+                                    });   
+        }
+        
+    });
+
+});
+
 
 app.post('/topic',function(req,res){
     var title= req.body.title;
@@ -33,7 +50,7 @@ app.post('/topic',function(req,res){
             res.status(500).send('Server Error');
         }
         else
-            res.send('Success');
+            res.redirect(`/topic/${title}`);
     });
 });
 
