@@ -1,0 +1,10 @@
+doctype html
+html
+    head
+        meta(charset='utf-8')
+        title Welcome
+    body    
+    if req.user
+        header Hi #{req.displayName} | logout
+    else
+        header Hi #{req.displayName} | login
