@@ -2,17 +2,16 @@ var express = require('express');
 var app = express();
 var bodyParser= require('body-parser');
 var fs = require("fs");
-var multer = require('multer'); // 
 
-var _storage = multer.diskStorage({
-    destination: function(req,file,cb){ // cb : callback
-        cb(null, './uploads/')
-    },
-    filename: function(req,file,cb){ 
-        cb(null,file.originalname);
-    }
+var mysql = require('mysql');
+var conn = mysql.createConnection({
+    host: 'localhost', // db 서버의 주소 
+    user: 'soul4927',
+    password: '9815chs',
+    database: 'o2'
 });
-var upload = multer({storage: _storage}); 
+
+conn.connect();
 
 
 app.use(bodyParser.urlencoded({extended: false}));

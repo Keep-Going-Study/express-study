@@ -1,0 +1,9 @@
+라우팅 처리
+
+get('topic/') : view.pug
+get('topic/:id') : view.pug
+get('topic/add') : add.pug
+post('topic/add') : /topic/:id 로 리다이렉트
+get('topic/:id/edit') : edit.pug
+post('topic/:id/edit') : /topic/:id 로 리다이렉트
+get('topic/:id/delete') : /topic 으로 리다이렉트
