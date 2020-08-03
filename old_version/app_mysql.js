@@ -57,22 +57,49 @@ app.post('/topic/add',function(req,res){
     
     var sql = 'INSERT INTO topic (title,description,author) VALUES (?,?,?)';
     db.query(sql, [title,description,author] ,function(err,result){
-        res.redirect(`/topic/${result.insertId}`);
+        res.redirect(`/topic/${result.insertId}`); // 결과페이지를 리다이렉트 
     });
     
-    /*
-    fs.writeFile(`data/${title}`, description, function(err){
-        if(err){
-            console.log(err);
-            res.status(500).send('Server Error');
-        }
-        else
-            res.redirect(`/topic/${title}`);
-    });
-    */
 });
 
-// 복수 라우팅 처리
+// 수정기능 ( 수정 form 페이지 생성)
+app.get( '/topic/:id/edit', function(req,res){
+    
+    var sql = 'SELECT id,title FROM topic';
+    db.query(sql,function(err,result1,fields){ // result1 은 topic 테이블의 모들 레코드 가져옴
+        var id = req.params.id;
+        
+        if(id){ // id 값이 있으면 수정 폼 페이지
+            var sql = 'SELECT * FROM topic WHERE id=?';
+            db.query(sql, id, function(err,result2){ // result2 는 입력받은 id 의 레코드만 가져옴 
+                res.render('edit.pug', {topics:result1, topic:result2[0]});
+            })
+        }
+        
+        else{ // id 값이 없으면 메인페이지
+            res.render('view.pug',{topics:result1}); 
+        }
+        
+    });
+    
+});
+
+// 수정기능 ( post 로 데이터 처리)
+app.post( '/topic/:id/edit', function(req,res){
+    
+    var title = req.body.title;
+    var description = req.body.description;
+    var author = req.body.author;
+    var id = req.params.id;
+
+    var sql = 'UPDATE topic SET title=?, description=?, author=? WHERE id=?';
+    db.query(sql,[title,description,author,id],function(err,result1,fields){ // result1 은 topic 테이블의 모들 레코드 가져옴
+        res.redirect(`/topic/${id}`);
+    });
+    
+});
+
+// 읽기기능 (복수 라우팅 처리)
 app.get( ['/topic', '/topic/:id'], function(req,res){
     var sql = 'SELECT id,title FROM topic';
     db.query(sql,function(err,result1,fields){ // result1 은 topic 테이블의 모들 레코드 가져옴

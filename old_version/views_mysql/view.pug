@@ -11,6 +11,8 @@ html
                     a(href=`/topic/${_topic.id}`)=_topic.title
 
         article
+            //- topic : 해당 토픽의 상세 데이터
+            
             if topic 
                 h2=topic.title
                 =topic.description
@@ -20,5 +22,12 @@ html
             else
                 h2 Welcome
                 | This is topic homepage
-        div
-            a(href='/topic/add') add
+        ul
+            li
+                a(href='/topic/add') add
+                
+            //- 상세보기 페이지에서만 edit 링크 표시
+            
+            if topic 
+                li
+                    a(href=`/topic/${topic.id}/edit`) edit
