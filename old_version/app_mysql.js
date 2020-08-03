@@ -42,10 +42,34 @@ app.post('/upload', upload.single('userfile'), function(req,res){
     res.send(`Uploaded : ${req.file.filename}`);
 })
 
-app.get('/topic/new', function(req,res){
-    fs.readdir('data',function(err, files){
-        res.render('new.pug', {topics:files});
+app.get('/topic/add', function(req,res){
+    // topic 목록 보여주기
+    var sql = 'SELECT id,title FROM topic';
+    db.query(sql, function(err,result){
+        res.render('add.pug',{topics: result});
     });
+});
+
+app.post('/topic/add',function(req,res){
+    var title= req.body.title;
+    var description = req.body.description;
+    var author = req.body.author;
+    
+    var sql = 'INSERT INTO topic (title,description,author) VALUES (?,?,?)';
+    db.query(sql, [title,description,author] ,function(err,result){
+        res.redirect(`/topic/${result.insertId}`);
+    });
+    
+    /*
+    fs.writeFile(`data/${title}`, description, function(err){
+        if(err){
+            console.log(err);
+            res.status(500).send('Server Error');
+        }
+        else
+            res.redirect(`/topic/${title}`);
+    });
+    */
 });
 
 // 복수 라우팅 처리
@@ -70,18 +94,7 @@ app.get( ['/topic', '/topic/:id'], function(req,res){
 });
 
 
-app.post('/topic',function(req,res){
-    var title= req.body.title;
-    var description = req.body.description;
-    fs.writeFile(`data/${title}`, description, function(err){
-        if(err){
-            console.log(err);
-            res.status(500).send('Server Error');
-        }
-        else
-            res.redirect(`/topic/${title}`);
-    });
-});
+
 
 app.listen(8080,function(){
     console.log('Connected, 8080 port!');
