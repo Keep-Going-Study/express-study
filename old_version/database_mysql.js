@@ -27,7 +27,7 @@ var params = ['NPM', 'mark', 2 ];
 var sql = 'DELETE FROM topic WHERE id=?';
 var params = [4];
 
-db.query(sql, params, function(err,result){
+db.query(sql, params, function(err,result,fields){ // fields 는 큰 필요가 없긴함
     console.log(result);
 });
 
