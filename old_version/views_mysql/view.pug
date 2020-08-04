@@ -26,8 +26,10 @@ html
             li
                 a(href='/topic/add') add
                 
-            //- 상세보기 페이지에서만 edit 링크 표시
+            //- 상세보기 페이지에서만(topic 인자 존재) edit,delete 링크 표시
             
             if topic 
                 li
                     a(href=`/topic/${topic.id}/edit`) edit
+                li 
+                    a(href=`/topic/${topic.id}/delete`) delete

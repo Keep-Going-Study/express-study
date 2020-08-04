@@ -30,6 +30,10 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.set('views','./views_mysql');
 app.set('view engine', 'pug');
 
+app.get('/',function(req,res){
+    res.redirect('/topic');
+})
+
 app.get('/upload',function(req,res){
     res.render('upload.pug')
 });
@@ -42,6 +46,7 @@ app.post('/upload', upload.single('userfile'), function(req,res){
     res.send(`Uploaded : ${req.file.filename}`);
 })
 
+
 app.get('/topic/add', function(req,res){
     // topic 목록 보여주기
     var sql = 'SELECT id,title FROM topic';
@@ -49,6 +54,7 @@ app.get('/topic/add', function(req,res){
         res.render('add.pug',{topics: result});
     });
 });
+
 
 app.post('/topic/add',function(req,res){
     var title= req.body.title;
@@ -85,7 +91,7 @@ app.get( '/topic/:id/edit', function(req,res){
 });
 
 // 수정기능 ( post 로 데이터 처리)
-app.post( '/topic/:id/edit', function(req,res){
+app.post('/topic/:id/edit', function(req,res){
     
     var title = req.body.title;
     var description = req.body.description;
@@ -99,6 +105,32 @@ app.post( '/topic/:id/edit', function(req,res){
     
 });
 
+// 실제 삭제하는 과정이 아니라 삭제 여부를 물어보는 페이지
+app.get('/topic/:id/delete', function(req,res){
+    var sql = 'SELECT id,title FROM topic';
+    var id = req.params.id;
+    db.query(sql,function(err,result1,fields){
+        var sql = 'SELECT * FROM topic WHERE id=?';
+        db.query(sql, id, function(err,result2){
+            if(result2.length === 0){
+               res.render('delete.pug',{topics:result1});
+            }
+           res.render('delete.pug',{topics:result1, topic:result2[0]});
+        });
+        
+    });
+});
+
+// 실제 삭제과정은 post 로 처리해야함
+app.post('/topic/:id/delete', function(req,res){
+   var id = req.params.id;
+   var sql = 'DELETE FROM topic WHERE id=?';
+   db.query(sql,id,function(err,result){
+        res.redirect('/topic');
+   });
+});
+
+
 // 읽기기능 (복수 라우팅 처리)
 app.get( ['/topic', '/topic/:id'], function(req,res){
     var sql = 'SELECT id,title FROM topic';
@@ -107,20 +139,20 @@ app.get( ['/topic', '/topic/:id'], function(req,res){
         
         if(id){ // id 값이 있으면 상세보기 페이지
             var sql = 'SELECT * FROM topic WHERE id=?';
+            //console.log(1);
             db.query(sql, id, function(err,result2){ // result2 는 입력받은 id 의 레코드만 가져옴 
                 res.render('view.pug', {topics:result1, topic:result2[0]});
             })
         }
         
         else{ // id 값이 없으면 메인페이지
+            //console.log(2);
             res.render('view.pug',{topics:result1}); 
         }
         
     });
 
 });
-
-
 
 
 app.listen(8080,function(){

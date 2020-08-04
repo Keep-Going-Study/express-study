@@ -1,0 +1,23 @@
+doctype html
+html
+    head
+        meta(charset='utf-8')
+    body
+        include header.pug
+        
+        ul
+            each _topic in topics
+                li
+                    a(href=`/topic/${_topic.id}`)=_topic.title
+                    
+        article
+            if topic
+                h1=`Delete topic : ${topic.title} ?`
+                form(action=`/topic/${topic.id}/delete` method='post')
+                    input(type='submit' value='YES')
+                    |
+                    |
+                    a(href=`/topic/${topic.id}`)
+                        input(type='button' value='NO')
+            else
+                h1 There is no topic
