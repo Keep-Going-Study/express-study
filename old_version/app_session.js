@@ -1,15 +1,28 @@
 var express = require('express');
 var session = require('express-session');
+var MySQLStore = require('express-mysql-session')(session);
 var bodyParser = require('body-parser');
 
 var app = express();
 
 app.use(bodyParser.urlencoded({ extended: false}));
 
+// MySQL 세션store 사용 옵션
+var options = {
+    host: 'localhost',
+    port: 3306,
+    user: 'soul4927',
+    password: '9815chs',
+    database: 'session'
+};
+ 
+var sessionStore = new MySQLStore(options);
+
 app.use(session({
     secret: 'sdf43jhsdfog', // 아무값이 넣으면 됨
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: true,
+    store: sessionStore
 }));
 
 
@@ -77,8 +90,10 @@ app.post('/auth/login', function(req,res){
 // 로그아웃 기능 : session 에서 displayName 프로퍼티를 삭제
 app.get('/auth/logout', function(req,res){
     delete req.session.displayName; // delete : JS 의 객체 프로퍼티 삭제 연산자
-    console.log(req.session);
-    res.redirect('/welcome');
+    req.session.save(function(){
+        res.redirect('/welcome');   
+    })
+    
 })
 
 app.get('/welcome', function(req,res){
@@ -99,3 +114,4 @@ app.get('/welcome', function(req,res){
 app.listen(8080,function(){
     console.log('connected!');
 })
+
