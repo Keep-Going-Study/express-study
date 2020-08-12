@@ -7,6 +7,7 @@ module.exports = function(app){
     
     var passport = require('passport');
     var LocalStrategy = require('passport-local').Strategy;
+    var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
     app.use(passport.initialize());
     app.use(passport.session());
@@ -49,6 +50,22 @@ module.exports = function(app){
             }
             
         }
+    ));
+    
+    // google login
+    var googleCredentials = require('../config/google.json'); // google login 설정파일 
+    //console.log(googleCredentials.web.client_id);
+    
+    passport.use(new GoogleStrategy({
+        clientID: googleCredentials.web.client_id,
+        clientSecret: googleCredentials.web.client_secret,
+        callbackURL: googleCredentials.web.redirect_uris
+      },
+      function(accessToken, refreshToken, profile, done) {
+           User.findOrCreate({ googleId: profile.id }, function (err, user) {
+             return done(err, user);
+           });
+      }
     ));
     
     // serializeUser : 로그인 성공 후에 사용자 정보를 세션 스토어에 저장하는 함수(최초 1회 호출)
