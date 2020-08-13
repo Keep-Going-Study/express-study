@@ -10,7 +10,10 @@ module.exports = {
     },
 
     SetAuthStatusUI:function(req,res){ // 로그인 상태 UI 를 설정하는 함수
-    var authStatusUI = `<a href="/auth/login">login</a> | <a href="/auth/register">Register</a>`;
+    var authStatusUI = `
+                        <a href="/auth/login">login</a> | 
+                        <a href="/auth/register">Register</a> |
+                        <a href="/auth/google">Login with Google</a>`;
     if(this.IsOwner(req,res)){
        authStatusUI = `Hi , <strong>${req.user.displayName}</strong> | <a href="/auth/logout">logout</a>`; 
     }

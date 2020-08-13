@@ -52,22 +52,6 @@ module.exports = function(app){
         }
     ));
     
-    // google login
-    var googleCredentials = require('../config/google.json'); // google login 설정파일 
-    //console.log(googleCredentials.web.client_id);
-    
-    passport.use(new GoogleStrategy({
-        clientID: googleCredentials.web.client_id,
-        clientSecret: googleCredentials.web.client_secret,
-        callbackURL: googleCredentials.web.redirect_uris
-      },
-      function(accessToken, refreshToken, profile, done) {
-           User.findOrCreate({ googleId: profile.id }, function (err, user) {
-             return done(err, user);
-           });
-      }
-    ));
-    
     // serializeUser : 로그인 성공 후에 사용자 정보를 세션 스토어에 저장하는 함수(최초 1회 호출)
     passport.serializeUser(function(user,done){
         //console.log('seraialzeUser Test', user);
@@ -81,6 +65,28 @@ module.exports = function(app){
         //console.log('deserializeUser Test ', 'id : ', id, ',user : ', user);
         done(null, user); 
     });
+    
+    // google login
+    var googleCredentials = require('../config/google.json'); // google login 설정파일 
+    //console.log(googleCredentials.web.client_id);
+    
+    passport.use(new GoogleStrategy({
+        clientID: googleCredentials.web.client_id,
+        clientSecret: googleCredentials.web.client_secret,
+        callbackURL: googleCredentials.web.redirect_uris[0]
+      },
+      function(accessToken, refreshToken, profile, done) {
+           User.findOrCreate({ googleId: profile.id }, function (err, user) {
+             return done(err, user);
+           });
+      }
+    ));
+    
+    // /auth/google 로 접속하면 passport 가 만들어주는 redirect 경로로 이동함
+    app.get('/auth/google',
+        passport.authenticate('google', {
+            scope: ['https://www.googleapis.com/auth/plus.login']
+        }));
     
     return passport;
 };
