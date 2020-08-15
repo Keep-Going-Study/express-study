@@ -4,7 +4,17 @@
       "id": "KCmltf67q",
       "email": "chs98105@gmail.com",
       "password": "$2b$10$zwiDzbU3pTfj3CqK4RGmcOLbTchkL8/dyYM57pGDKvR/UvO4IEe.6",
-      "displayName": "soul"
+      "displayName": "soul",
+      "googleProfile": {
+        "sub": "110678391499997625125",
+        "name": "Hyeon Soo Choi",
+        "given_name": "Hyeon Soo",
+        "family_name": "Choi",
+        "picture": "https://lh5.googleusercontent.com/-8hz8ufDEXAg/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucmEJs4Rs_DyM3Yrm-c7PE5CA84TGQ/photo.jpg",
+        "email": "chs98105@gmail.com",
+        "email_verified": true,
+        "locale": "ko"
+      }
     },
     {
       "id": "Qh-1lxJ_s",

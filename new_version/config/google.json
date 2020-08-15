@@ -1,11 +1,1 @@
-{
-    "web":{
-        "client_id":"196465694323-80mg2kqnc738u1tpah35i8asg8ud211p.apps.googleusercontent.com",
-        "project_id":"lucky-kayak-285914",
-        "auth_uri":"https://accounts.google.com/o/oauth2/auth",
-        "token_uri":"https://oauth2.googleapis.com/token",
-        "auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs",
-        "client_secret":"N3dCWPnWDO2FVD0ETiFZ4O3D",
-        "redirect_uris":["http://keepgoing-hyeonsoo.com/auth/google/callback"]
-    }
-}
+{"web":{"client_id":"196465694323-80mg2kqnc738u1tpah35i8asg8ud211p.apps.googleusercontent.com","project_id":"lucky-kayak-285914","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":"N3dCWPnWDO2FVD0ETiFZ4O3D","redirect_uris":["http://prac.keepgoing-hyeonsoo.com/auth/google/callback"]}}
