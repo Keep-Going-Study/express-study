@@ -1,10 +1,15 @@
 {
   "users": [
     {
-      "id": "KCmltf67q",
+      "id": "Qh-1lxJ_s",
+      "email": "o2@naver.com",
+      "password": "$2b$10$Ait9h01bHRKOfjgGRYvB4urIHFIBZfK.g0d/.FQq81sUOu4eQQc4W",
+      "displayName": "O2"
+    },
+    {
+      "id": "r1zlk9vf6",
       "email": "chs98105@gmail.com",
-      "password": "$2b$10$zwiDzbU3pTfj3CqK4RGmcOLbTchkL8/dyYM57pGDKvR/UvO4IEe.6",
-      "displayName": "soul",
+      "displayName": "Soul2",
       "googleProfile": {
         "sub": "110678391499997625125",
         "name": "Hyeon Soo Choi",
@@ -14,13 +19,8 @@
         "email": "chs98105@gmail.com",
         "email_verified": true,
         "locale": "ko"
-      }
-    },
-    {
-      "id": "Qh-1lxJ_s",
-      "email": "o2@naver.com",
-      "password": "$2b$10$Ait9h01bHRKOfjgGRYvB4urIHFIBZfK.g0d/.FQq81sUOu4eQQc4W",
-      "displayName": "O2"
+      },
+      "password": "$2b$10$Ry85Jv/0vW6KZHvF7JjOruODPSiRVL0RwqJ4q6EsullS2B7zykin."
     }
   ],
   "topics": [

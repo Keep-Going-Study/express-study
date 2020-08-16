@@ -82,7 +82,15 @@ module.exports = function(passport){
        else{
            
             bcrypt.hash(pwd,10,function(err,hash_pw){
-                
+            
+            var user = db.get('users').find({email:email}).value();
+            
+            if(user){ // google login 한 사용자 계정이 존재할때
+                user.password = hash_pw;
+                user.displayName = displayName;
+                db.get('users').find({id:user.id}).assign(user).write();
+            }
+            else{ // local 로 최초 회원가입
                 var user={
                     id:shortid.generate(),
                     email:email,
@@ -91,6 +99,7 @@ module.exports = function(passport){
                 };
                 
                 db.get('users').push(user).write();
+            }
            
                 req.login(user,function(err){
                     return res.redirect('/');

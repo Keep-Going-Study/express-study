@@ -1,5 +1,6 @@
 var db = require('../lib/db');
 var bcrypt = require('bcrypt');
+var shortid = require('shortid');
 
 // passport 에 관한 함수들을 모듈로 분리
 // app 객체를 입력 파라미터로 받고, passport 객체를 리턴한다.
@@ -80,8 +81,22 @@ module.exports = function(app){
         
         var email = profile.emails[0].value;
         var user = db.get('users').find({email:email}).value();
-        user.googleProfile = profile._json;
-        db.get('users').find({id:user.id}).assign(user).write(); //user 정보 최신화
+        
+        if(user){   // local에 회원정보있는 상태에서 google login 하는 경우
+            user.googleProfile = profile._json;
+            db.get('users').find({id:user.id}).assign(user).write(); //user 정보 최신화    
+        }
+        else{ // google login 으로 최초 회원등록
+            user = {
+                id:shortid.generate(), // local 자체 id 생성
+                email:profile._json.email,
+                displayName:profile.displayName,
+                googleProfile:profile._json
+            }
+            
+            db.get('users').push(user).write();
+        }
+        
         done(null,user);
             
       }
